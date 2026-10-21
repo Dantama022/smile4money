@@ -152,8 +152,13 @@ async function deserializeMatch(
 
   // Fetch current ledger height from RPC
   const server = new rpc.Server(rpcUrl);
-  const ledgerResponse = await server.getLedgers().order('desc').limit(1).call();
-  const currentLedger = parseInt(ledgerResponse.records[0].sequence, 10);
+  let currentLedger = 0;
+  try {
+    const latestLedger = await server.getLatestLedger();
+    currentLedger = typeof latestLedger.sequence === 'number' ? latestLedger.sequence : parseInt(String(latestLedger.sequence), 10);
+  } catch {
+    currentLedger = 0;
+  }
 
   return {
     stakeAmount: String(raw.stake_amount),

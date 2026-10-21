@@ -271,7 +271,7 @@ describe.each(VIEWPORTS)('at $width px ($label)', ({ width, height }) => {
       const offenders = [...container.querySelectorAll('*')].filter((el) => {
         // Read the inline style through the CSSOM rather than typing the element
         // as `HTMLElement`, which keeps this file free of DOM type references.
-        const inlineWidth = el.style?.width ?? '';
+        const inlineWidth = (el as HTMLElement).style?.width ?? '';
         return inlineWidth.endsWith('px') && Number.parseFloat(inlineWidth) > width;
       });
       expect(offenders).toHaveLength(0);
